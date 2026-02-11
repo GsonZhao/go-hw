@@ -1,5 +1,7 @@
 package homework01
 
+import "fmt"
+
 // 1. 只出现一次的数字
 // 给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
 func SingleNumber(nums []int) int {
@@ -10,17 +12,105 @@ func SingleNumber(nums []int) int {
 	return result
 }
 
+func IsPalindrome(x int) bool {
+	return isPalindrome_0(x)
+}
+
 // 2. 回文数
 // 判断一个整数是否是回文数
-func IsPalindrome(x int) bool {
-	// TODO: implement
-	return false
+func isPalindrome_0(x int) bool {
+	if x < 0 {
+		return false
+	}
+	if x == 0 {
+		return true
+	}
+	var cache []int
+	for x > 0 {
+		last := x % 10
+		x = x / 10
+		cache = append(cache, last)
+	}
+
+	size := len(cache)
+	if size == 0 {
+		return false
+	}
+
+	for i, v := range cache {
+		if v != cache[size-1-i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+func isPalindrome_1(x int) bool {
+	// 特殊情况：
+	// 如上所述，当 x < 0 时，x 不是回文数。
+	// 同样地，如果数字的最后一位是 0，为了使该数字为回文，
+	// 则其第一位数字也应该是 0
+	// 只有 0 满足这一属性
+	if x < 0 || (x%10 == 0 && x != 0) {
+		return false
+	}
+
+	revertedNumber := 0
+	for x > revertedNumber {
+		revertedNumber = revertedNumber*10 + x%10
+		x /= 10
+	}
+
+	// 当数字长度为奇数时，我们可以通过 revertedNumber/10 去除处于中位的数字。
+	// 例如，当输入为 12321 时，在 while 循环的末尾我们可以得到 x = 12，revertedNumber = 123，
+	// 由于处于中位的数字不影响回文（它总是与自己相等），所以我们可以简单地将其去除。
+	return x == revertedNumber || x == revertedNumber/10
 }
 
 // 3. 有效的括号
 // 给定一个只包括 '(', ')', '{', '}', '[', ']' 的字符串，判断字符串是否有效
+func isMatch(left, right byte) bool {
+	switch {
+	case left == '(' && right == ')':
+		return true
+	case left == '[' && right == ']':
+		return true
+	case left == '{' && right == '}':
+		return true
+	default:
+		return false
+	}
+}
+
 func IsValid(s string) bool {
-	// TODO: implement
+	var cache []byte
+	for i := 0; i < len(s); i++ {
+		cur := s[i]
+		var next byte = '0'
+		if i < len(s)-1 {
+			next = s[i+1]
+		}
+		if isMatch(cur, next) {
+			i++
+		} else {
+			if len(cache) != 0 && isMatch(cache[len(cache)-1], cur) {
+				if len(cache) > 1 {
+					cache = cache[:len(cache)-1]
+				} else {
+					cache = []byte{}
+				}
+			} else {
+				cache = append(cache, cur)
+			}
+			fmt.Printf("cache: %v\n", cache)
+		}
+	}
+
+	if len(cache) == 0 {
+		return true
+	}
+
 	return false
 }
 

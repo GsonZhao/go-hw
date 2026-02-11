@@ -80,7 +80,8 @@ func TestIsPalindrome(t *testing.T) {
 		{"Example 1", 121, true},
 		{"Example 2", -121, false},
 		{"Example 3", 10, false},
-		{"Example 4", 0, true},
+		{"Example 4", 11, true},
+		{"Example 5", 0, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -103,7 +104,9 @@ func TestIsValid(t *testing.T) {
 		{"Example 3", "(]", false},
 		{"Example 4", "([)]", false},
 		{"Example 5", "{[]}", true},
+		{"Example 6", "(([]){})", true},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := IsValid(tt.s); got != tt.want {
